@@ -1,3 +1,8 @@
+# Optimized by ci-cost (https://github.com/mariotavarez/ci-cost)
+# Applied 1 optimization:
+# - [MEDIUM] Add concurrency group to "e2e-perf.yml"
+# Estimated savings: ~2 min/run
+#
 name: 'e2e-perf'
 on:
   push:
@@ -10,6 +15,10 @@ on:
       - opened
   schedule:
     - cron: '0 0 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   e2e-full:
     if: contains(github.event.pull_request.labels.*.name, 'pr:e2e:perf') || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
